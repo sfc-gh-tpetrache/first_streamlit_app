@@ -40,6 +40,7 @@ streamlit.text("Hello from Snowflake:")
 streamlit.dataframe(my_data_row)
 
 
-
-
+add_my_fruit = streamlit.text_input("What fruit would you like to know info about?", 'Kiwi')
+streamlit.write('thanks for adding', add_my_fruit)
+my_cur.execute("insert into fruit_load_list values ('from_streamlit') ")
 
