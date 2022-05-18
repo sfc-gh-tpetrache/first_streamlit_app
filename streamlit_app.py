@@ -1,5 +1,7 @@
 import streamlit
 
+from urllib.error import URLError
+
 streamlit.title('My parents healty Dining!')
 
 streamlit.header('Breakfast Menu')
@@ -21,15 +23,22 @@ streamlit.dataframe(fruits_to_show)
 
 import requests
 streamlit.header("Fruit Advice!")
-fruit_choice = streamlit.text_input("What fruit would you like to know info about?", 'Kiwi')
-fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
+try:
+  fruit_choice = streamlit.text_input("What fruit would you like to know info about?", 'Kiwi')
+  if not fruit_choice:
+    streamlit.error("select a fruit!")
+  else:
+    fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
+    fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
+    streamlit.dataframe(fruityvice_normalized)
+except URLError as e:
+  streamlit.error()
+  
 #streamlit.text(fruityvice_response.json())
 
 
-fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
 
-streamlit.dataframe(fruityvice_normalized)
-
+streamlit.stop()
 import snowflake.connector
 
 my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
